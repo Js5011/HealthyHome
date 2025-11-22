@@ -1,1 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>HealthyHome — AI for healthier living</title>
+  <meta name="description" content="HealthyHome — an AI assistant that helps you improve home air, lighting, plants, and routines for a healthier life.">
+  <link rel="icon" href="data:;base64,iVBORw0KGgo="> 
+  <style>
+    /* ==========================
+       HealthyHome — Single-file CSS
+       Modern, responsive layout with components
+       ========================== */
+    :root{
+      --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#22c55e; --glass: rgba(255,255,255,0.04);
+      --max-width:1200px; --radius:14px; --fw-heading:700;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+      background:linear-gradient(180deg,#071028 0%, #071831 60%);color:#e6eef6;line-height:1.45;
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:24px;
+      display:flex;align-items:flex-start;justify-content:center;
+    }
+    .container{width:100%;max-width:var(--max-width)}
 
+    header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 6px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:800;color:#042017}
+    .brand h1{margin:0;font-size:20px;letter-spacing:-0.2px}
+    nav{display:flex;gap:12px;align-items:center}
+    nav a{color:var(--muted);text-decoration:none;padding:8px;border-radius:8px;font-weight:600}
+    nav a:hover{color:#fff;background:rgba(255,255,255,0.02)}
+    .cta{background:linear-gradient(90deg,var(--accent),#06b6d4);color:#042017;padding:10px 14px;border-radius:10px;font-weight:700;border:none;cursor:pointer}
+
+    main{display:grid;grid-template-columns:1fr 440px;gap:28px;align-items:start;padding:18px 6px}
+
+    /* Left content */
+    .hero{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:var(--radius);padding:28px;box-shadow:0 6px 30px rgba(2,6,23,0.6);backdrop-filter:blur(6px)}
+    .eyebrow{color:var(--accent);font-weight:700;font-size:13px;display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(34,197,94,0.08)}
+    h2{margin:16px 0 8px;font-size:34px;line-height:1.02;font-weight:var(--fw-heading)}
+    p.lead{margin:0;color:var(--muted);font-size:15px}
+
+    .features{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:22px}
+    .feature{background:var(--card);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;gap:12px;align-items:flex-start}
+    .feature .icon{width:44px;height:44px;border-radius:10px;background:var(--glass);display:grid;place-items:center;font-weight:800;color:var(--accent)}
+    .feature h4{margin:0;font-size:15px}
+    .feature p{margin:6px 0 0;color:var(--muted);font-size:13px}
+
+    /* Right column: interactive demo / signup */
+    .panel{background:linear-gradient(180deg,rgba(255,255,255,0.03),transparent);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+    .demo{height:420px;display:flex;flex-direction:column;gap:12px}
+
+    /* chat area */
+    .chat{flex:1;overflow:auto;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(2,6,23,0.25), rgba(2,6,23,0.10));border:1px solid rgba(255,255,255,0.02)}
+    .msg{margin:8px 0;display:flex;gap:10px;align-items:flex-end}
+    .msg.you{justify-content:flex-end}
+    .bubble{max-width:78%;padding:10px 12px;border-radius:12px;background:linear-gradient(180deg,#071a26,#0b2231);border:1px solid rgba(255,255,255,0.02)}
+    .bubble.you{background:linear-gradient(180deg,#07321e,#083a26);color:#dfffe6}
+    .controls{display:flex;gap:8px}
+    .input{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    button.primary{padding:10px 12px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent),#06b6d4);color:#042017;font-weight:700}
+
+    /* Utility & sections */
+    section.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px}
+    .card{background:var(--card);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+    .card h3{margin:0 0 8px}
+    footer{margin-top:28px;color:var(--muted);font-size:13px;padding:12px 6px;text-align:center}
+
+    /* Responsive */
+    @media (max-width:980px){main{grid-template-columns:1fr;}
+      .demo{height:auto}
+      section.cards{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:600px){.features{grid-template-columns:1fr}
+      section.cards{grid-template-columns:1fr}
+      header{flex-direction:column;align-items:flex-start}
+    }
+
+    /* subtle focus styles */
+    :focus{outline:3px solid rgba(34,197,94,0.14);outline-offset:2px}
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">HH</div>
+        <div>
+          <h1>HealthyHome</h1>
+          <div style="color:var(--muted);font-size:13px">AI for healthier homes</div>
+        </div>
+      </div>
+      <nav aria-label="Main navigation">
+        <a href="#features">Features</a>
+        <a href="#demo">Demo</a>
+        <a href="#pricing">Pricing</a>
+        <button class="cta" id="themeToggle" aria-pressed="false">Toggle Theme</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="heroTitle">
+        <span class="eyebrow">Now in Early Access</span>
+        <h2 id="heroTitle">Turn your home into a healthier, happier place — with AI.</h2>
+        <p class="lead">HealthyHome combines sensor data, schedule optimization, and personalized advice to improve indoor air quality, lighting, plant care, and daily routines. Privacy-first and energy-aware.</p>
+
+        <div class="features" id="features" aria-hidden="false">
+          <div class="feature">
+            <div class="icon">AQ</div>
+            <div>
+              <h4>Air-quality Insights</h4>
+              <p>Real-time suggestions to reduce pollutants and manage ventilation intelligently.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="icon">L</div>
+            <div>
+              <h4>Adaptive Lighting</h4>
+              <p>Optimize circadian-friendly lighting schedules and save energy.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="icon">P</div>
+            <div>
+              <h4>Plant Care Coach</h4>
+              <p>Personalized watering & light guidance for houseplants and edible gardens.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="icon">R</div>
+            <div>
+              <h4>Routine Builder</h4>
+              <p>Micro-habits and reminders that improve sleep, productivity and well-being.</p>
+            </div>
+          </div>
+        </div>
+
+        <section class="cards" aria-label="More features">
+          <div class="card">
+            <h3>Privacy-first</h3>
+            <p>Edge-first AI processing with optional cloud sync. You control the data that leaves your home.</p>
+          </div>
+          <div class="card">
+            <h3>Integrations</h3>
+            <p>Works with common sensors, smart plugs, and calendar apps through secure connectors.</p>
+          </div>
+          <div class="card">
+            <h3>Explainable Advice</h3>
+            <p>Every recommendation shows the reason, impact estimate, and sources for transparency.</p>
+          </div>
+        </section>
+
+      </section>
+
+      <aside class="panel" id="demo" aria-labelledby="demoTitle">
+        <h3 id="demoTitle">Interactive demo</h3>
+        <p style="color:var(--muted);margin-top:6px">Try the mock AI assistant below (this demo runs locally and does not send data off-device).</p>
+
+        <div class="demo" role="region" aria-live="polite">
+          <div class="chat" id="chat" tabindex="0" aria-label="Conversation with HealthyHome Assistant">
+            <!-- messages will be injected here -->
+          </div>
+
+          <div class="controls" aria-hidden="false">
+            <input class="input" id="userInput" placeholder="Ask: e.g. 'My living room feels stuffy — suggestions?'" aria-label="Ask HealthyHome" />
+            <button class="primary" id="sendBtn">Ask</button>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:10px;align-items:center;justify-content:space-between">
+            <small style="color:var(--muted)">Model: local simulator • Privacy: local only</small>
+            <div>
+              <button class="cta" id="analyzeBtn">Auto-analyze sample room</button>
+            </div>
+          </div>
+        </div>
+
+        <hr style="border:none;height:1px;background:rgba(255,255,255,0.03);margin:12px 0">
+
+        <form id="signup" aria-label="Sign up for early access">
+          <label for="email" style="display:block;font-weight:700;margin-bottom:6px">Early access signup</label>
+          <input id="email" name="email" type="email" placeholder="you@domain.com" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit" required />
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="cta" type="submit">Join waitlist</button>
+            <button type="button" id="clearBtn" style="padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--muted)">Clear</button>
+          </div>
+          <div id="signupMsg" style="color:var(--muted);margin-top:8px;font-size:13px"></div>
+        </form>
+
+      </aside>
+
+    </main>
+
+    <footer>
+      © <span id="year"></span> HealthyHome — Built with care • <a href="#" style="color:var(--muted)">Privacy</a> • <a href="#" style="color:var(--muted)">Docs</a>
+    </footer>
+  </div>
+
+  <script>
+    /* =========================
+       HealthyHome — Single-file JS
+       - Lightweight mock AI demo
+       - Accessibility & small persistence
+       - No external calls
+       ========================= */
+
+    (function(){
+      const chat = document.getElementById('chat');
+      const input = document.getElementById('userInput');
+      const sendBtn = document.getElementById('sendBtn');
+      const analyzeBtn = document.getElementById('analyzeBtn');
+      const signup = document.getElementById('signup');
+      const emailInput = document.getElementById('email');
+      const signupMsg = document.getElementById('signupMsg');
+      const year = document.getElementById('year');
+      const themeToggle = document.getElementById('themeToggle');
+      const clearBtn = document.getElementById('clearBtn');
+
+      year.textContent = new Date().getFullYear();
+
+      // Utility to append message
+      function addMessage(text, who='bot'){
+        const msg = document.createElement('div');
+        msg.className = 'msg ' + (who==='you' ? 'you' : 'bot');
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble ' + (who==='you' ? 'you' : '');
+        bubble.textContent = text;
+        msg.appendChild(bubble);
+        chat.appendChild(msg);
+        chat.scrollTop = chat.scrollHeight;
+      }
+
+      // Typing effect for bot answer (keeps accessibility)
+      async function botReplyStream(fullText){
+        const msg = document.createElement('div');
+        msg.className = 'msg bot';
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        msg.appendChild(bubble);
+        chat.appendChild(msg);
+        chat.scrollTop = chat.scrollHeight;
+
+        bubble.setAttribute('aria-live','polite');
+        bubble.textContent = '';
+        for(let i=0;i<fullText.length;i++){
+          bubble.textContent += fullText[i];
+          chat.scrollTop = chat.scrollHeight;
+          await new Promise(r=>setTimeout(r,12 + Math.random()*25));
+        }
+      }
+
+      // Very small local "reasoner" — deterministic rules based on keywords.
+      function localAnalyze(text){
+        const t = text.toLowerCase();
+        const suggestions = [];
+        if(/stuffy|stale|odor|smell|pollut/i.test(t)){
+          suggestions.push("Open windows for 10–15 minutes when weather allows, or run a mechanical fan for 20 minutes. Consider a HEPA filter if allergies are present.");
+        }
+        if(/humid|mold|damp/i.test(t)){
+          suggestions.push("Use a dehumidifier to keep indoor RH between 40–50%. Fix any leaks and remove wet materials promptly.");
+        }
+        if(/dark|sleep|tired|lighting/i.test(t)){
+          suggestions.push("Increase bright, blue-enriched light in the morning and reduce it in the evening with warm tones. Try a 20-minute exposure to daylight within 1 hour of waking.");
+        }
+        if(/plant|wilt|water/i.test(t)){
+          suggestions.push("Check soil moisture an inch below surface before watering; most houseplants prefer drying somewhat between waterings. Rotate plants weekly for even light.");
+        }
+        if(/noise|sound/i.test(t)){
+          suggestions.push("Use soft textiles, rugs, or draft-sealing to reduce noise. White-noise machines can help mask intermittent sounds for sleep.");
+        }
+        if(suggestions.length===0) suggestions.push("Could you tell me which room and what's different — e.g. smell, lighting, temperature, or plants? I can then give targeted tips.");
+        return suggestions.join('\n\n');
+      }
+
+      // handle send
+      sendBtn.addEventListener('click', async ()=>{
+        const val = input.value.trim();
+        if(!val) return input.focus();
+        addMessage(val,'you');
+        input.value='';
+        const reply = localAnalyze(val);
+        await botReplyStream(reply);
+      });
+
+      input.addEventListener('keydown', (e)=>{
+        if(e.key==='Enter' && !e.shiftKey){
+          e.preventDefault(); sendBtn.click();
+        }
+      });
+
+      // auto analyze sample room
+      analyzeBtn.addEventListener('click', async ()=>{
+        addMessage('Analyze sample: Living room with stale air, low light, and a sleepy houseplant.','you');
+        const reply = localAnalyze('stale air low light sleepy houseplant');
+        await botReplyStream(reply);
+      });
+
+      // Signup handling — local mock with validation and small persistence
+      signup.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const email = emailInput.value.trim();
+        if(!email){ signupMsg.textContent = 'Please provide an email.'; emailInput.focus(); return }
+        // simple email regex
+        if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+          signupMsg.textContent = 'Enter a valid email address.'; emailInput.focus(); return
+        }
+        // simulate storing to local list
+        const list = JSON.parse(localStorage.getItem('hh_waitlist')||'[]');
+        if(list.includes(email.toLowerCase())){
+          signupMsg.textContent = 'You are already on the waitlist — thanks!';
+        } else {
+          list.push(email.toLowerCase());
+          localStorage.setItem('hh_waitlist', JSON.stringify(list));
+          signupMsg.textContent = 'Thanks — you are on the waitlist! We will email when early access opens.';
+        }
+      });
+
+      clearBtn.addEventListener('click', ()=>{
+        emailInput.value=''; signupMsg.textContent='';
+      });
+
+      // Theme toggle (simple inversion + storing preference)
+      function setTheme(isLight){
+        if(isLight){
+          document.documentElement.style.setProperty('--bg','#f7fafc');
+          document.documentElement.style.setProperty('--card','#ffffff');
+          document.documentElement.style.setProperty('--muted','#44566a');
+          document.documentElement.style.setProperty('--accent','#06b6d4');
+          document.body.style.color = '#042027';
+          themeToggle.setAttribute('aria-pressed','true');
+        } else {
+          document.documentElement.style.removeProperty('--bg');
+          document.documentElement.style.removeProperty('--card');
+          document.documentElement.style.removeProperty('--muted');
+          document.documentElement.style.removeProperty('--accent');
+          document.body.style.color = '';
+          themeToggle.setAttribute('aria-pressed','false');
+        }
+        localStorage.setItem('hh_theme_light', isLight ? '1' : '0');
+      }
+
+      themeToggle.addEventListener('click', ()=>{
+        const cur = localStorage.getItem('hh_theme_light') === '1';
+        setTheme(!cur);
+      });
+
+      // initialise
+      if(localStorage.getItem('hh_theme_light') === '1') setTheme(true);
+
+      // keyboard shortcut to focus the demo input: press '/'
+      window.addEventListener('keydown', (e)=>{
+        if(e.key==='/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
+          e.preventDefault(); input.focus();
+        }
+      });
+
+      // small onboarding message
+      (async function welcome(){
+        await botReplyStream('Hi — I\'m HealthyHome (demo). Ask me about air, lighting, plants, or routines. Try: "My bedroom smells musty"');
+      })();
+
+      // make chat area focusable and announce new content for screen readers
+      const observer = new MutationObserver(()=>{
+        // keep chat scrolled & mark aria-live region
+        chat.setAttribute('aria-live','polite');
+      });
+      observer.observe(chat, {childList:true});
+
+    })();
+  </script>
+</body>
+</html>
