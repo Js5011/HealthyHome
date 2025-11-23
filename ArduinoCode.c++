@@ -26,5 +26,5 @@ void loop() {
   Serial.print(",");
   Serial.println(humidity);
   //delay(120000); // DHT11 can only be read every ~1–2 seconds
-  delay(120000);
+  delay(3600000);
 }
